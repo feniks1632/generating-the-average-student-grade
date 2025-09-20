@@ -18,7 +18,7 @@ def read_csv_file(file_paths):
     return result_students
 
 
-def generate_reports_student(data):
+def generate_student_report(data):
     result_list = []
     student_grades = {}
     for row in data:
@@ -42,6 +42,10 @@ def generate_reports_student(data):
     result_list.sort(key=lambda x: x["average"], reverse=True)
     return result_list
 
+REPORTS = {
+    "student-performance": generate_student_report,
+    # сюда можно будет добавлять новые — функции для отчетов
+}
 
 def main():
     # Создаем обьект парсера аргументов скрипта и название отчета
@@ -55,18 +59,19 @@ def main():
         help="Список CSV файлов с данными по успеваемости",
     )
     parser.add_argument(
-        "--report", required=True, help="Название отчета - Student-performance"
+        "--report", required=True, help="Название отчета - student-performance"
     )
     args = parser.parse_args()
-
-    if args.report != "student-performance":
-        print(
-            f"Неправильное название отчета'{args.report}' измените название на - student-performance"
-        )
+        
+    if args.report not in REPORTS:
+        print(f"Отчёт '{args.report}' не поддерживается. Доступные: {', '.join(REPORTS.keys())}")
         sys.exit(1)
 
+    report_func = REPORTS[args.report] # Берем функцию из нашего словаря с функциями
+
     data = read_csv_file(args.files)
-    report_data = generate_reports_student(data)
+    
+    report_data = report_func(data)
 
     table = tabulate(report_data, headers="keys", tablefmt="grid")
     print(table)
