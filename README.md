@@ -54,6 +54,6 @@ python parse_csv_file.py --files test1.csv test2.csv --report student-performanc
 ```
 coverage run -m pytest tests/
 ```
-(можно просто pytest testas/ но в первой команде увидите еще и процентное соотношение тестового покрытия:)
+(можно просто pytest tests/ но в первой команде увидите еще и процентное соотношение тестового покрытия:)
 
 Автор : Никита Бражников.
